@@ -1,7 +1,9 @@
 package com.employeeManagementSystem.controller;
 
 import com.employeeManagementSystem.entity.Employee;
+import com.employeeManagementSystem.service.EmployeeService;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,27 +16,18 @@ import java.util.List;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-	private List<Employee> theEmployees;
+	private EmployeeService employeeService;
 
-	@PostConstruct
-	private void loadData() {
-
-		// create employees
-		Employee emp1 = new Employee("Konrad", "Tupta", "konrad@mail.com");
-		Employee emp2 = new Employee("Daniel", "Wasowicz", "daniel@mail.com");
-		Employee emp3 = new Employee("Joseph", "Guptas", "joseph@mail.com");
-
-		// create the list
-		theEmployees = new ArrayList<>();
-
-		// add to the list
-		theEmployees.add(emp1);
-		theEmployees.add(emp2);
-		theEmployees.add(emp3);
+	@Autowired
+	public EmployeeController(EmployeeService theEmployeeSerivice) {
+		employeeService = theEmployeeSerivice;
 	}
 
 	@GetMapping("/list")
 	public String listEmployees(Model theModel) {
+
+		// get the employees from data base
+		List<Employee> theEmployees = employeeService.findAll();
 
 		// add to the spring model
 		theModel.addAttribute("employees", theEmployees);
